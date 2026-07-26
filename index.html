@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบสมัครงาน / Application for Employment</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#2fada0;
+    --teal-dark:#1f7d73;
+    --ink:#1c1c1c;
+    --line:#3a3a3a;
+    --paper:#ffffff;
+    --muted:#666;
+    --bg:#f4f6f6;
+    --card:#ffffff;
+    --border:#e2e6e6;
+    --danger:#c0453a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Sarabun','Tahoma',sans-serif;
+    color:var(--ink);
+  }
+
+  /* =====================================================
+     PUBLIC APPLICATION FORM
+     ===================================================== */
+  #publicView{
+    background:var(--teal);
+    padding:28px 12px;
+    min-height:100vh;
+  }
+  .sheet{
+    max-width:760px;
+    margin:0 auto;
+    background:var(--paper);
+    border:10px solid var(--teal);
+    padding:34px 38px 40px;
+  }
+  .header{
+    text-align:center;
+    margin-bottom:18px;
+    position:relative;
+  }
+  .header h1{
+    font-size:20px;
+    letter-spacing:1px;
+    margin:0 0 4px;
+    font-weight:700;
+  }
+  .header h2{
+    font-size:19px;
+    margin:0 0 4px;
+    font-weight:600;
+  }
+  .header p{
+    margin:2px 0;
+    font-size:13px;
+  }
+  .header p.note{
+    font-style:italic;
+  }
+  .photo-box{
+    position:absolute;
+    top:-6px;
+    right:0;
+    width:92px;
+    height:110px;
+    border:1.5px solid var(--line);
+  }
+  .field-row{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin:6px 0 2px;
+    font-size:14px;
+  }
+  .field-row .lbl{
+    white-space:nowrap;
+    flex:0 0 auto;
+  }
+  .field-row input[type=text], .field-row input[type=number], .field-row input[type=date]{
+    border:none;
+    border-bottom:1px dotted var(--line);
+    background:transparent;
+    flex:1 1 auto;
+    font-family:inherit;
+    font-size:14px;
+    padding:2px 4px;
+    min-width:20px;
+    color:var(--ink);
+  }
+  .field-row input:focus{
+    outline:none;
+    border-bottom:1px solid var(--teal);
+  }
+  .bilingual{
+    font-size:13px;
+    color:var(--muted);
+    margin:0 0 0 0;
+  }
+  .thai-label{ font-weight:600; font-size:14px; }
+  .eng-label{ color:var(--muted); font-size:12.5px; margin-bottom:6px; }
+  .section-title{
+    font-weight:700;
+    font-size:15px;
+    margin:22px 0 10px;
+  }
+  .grid3{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    column-gap:18px;
+  }
+  .grid2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:18px;
+  }
+  .block{ margin-bottom:4px; }
+  .block .thai-label{ display:block; }
+  .block .eng-label{ display:block; }
+  hr.spacer{
+    border:none;
+    border-top:1px solid transparent;
+    margin:14px 0 0;
+  }
+  .checks{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:6px 12px;
+    margin:14px 0 6px;
+  }
+  .checks.two{ grid-template-columns:repeat(2,1fr); }
+  .check-item{
+    text-align:center;
+    font-size:13px;
+  }
+  .check-item .th{ font-weight:600; margin-bottom:2px; }
+  .check-item label{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    color:var(--muted);
+    font-size:12.5px;
+  }
+  .check-item input[type=checkbox]{
+    width:15px;height:15px;
+    accent-color:var(--teal);
+  }
+  .actions{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    margin-top:30px;
+    flex-wrap:wrap;
+  }
+  .actions button{
+    font-family:inherit;
+    font-size:14px;
+    padding:10px 22px;
+    border-radius:6px;
+    border:1.5px solid var(--teal);
+    background:var(--teal);
+    color:#fff;
+    cursor:pointer;
+  }
+  .actions button.secondary{
+    background:#fff;
+    color:var(--teal);
+  }
+  .actions button:hover{ opacity:0.85; }
+  .status{
+    text-align:center;
+    font-size:13px;
+    color:var(--teal);
+    min-height:18px;
+    margin-top:10px;
+    font-weight:600;
+  }
+  @media (max-width:600px){
+    .sheet{ padding:20px 16px 28px; }
+    .grid3, .grid2, .checks{ grid-template-columns:1fr 1fr; }
+    .photo-box{ position:static; margin:10px auto 0; }
+    .header h1{ font-size:17px; }
+  }
+
+  /* =====================================================
+     ADMIN AREA (login + dashboard)
+     ===================================================== */
+  #adminView{ background:var(--bg); min-height:100vh; }
+
+  #loginScreen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(160deg, var(--teal) 0%, var(--teal-dark) 100%);
+    padding:20px;
+  }
+  .login-card{
+    background:var(--card);
+    width:100%;
+    max-width:360px;
+    border-radius:10px;
+    padding:32px 28px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.18);
+  }
+  .login-card h1{
+    font-size:19px;
+    margin:0 0 4px;
+    text-align:center;
+  }
+  .login-card p.sub{
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    margin:0 0 22px;
+  }
+  .login-card label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:5px;
+  }
+  .login-card input{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    font-family:inherit;
+    font-size:14px;
+    margin-bottom:16px;
+  }
+  .login-card input:focus{
+    outline:none;
+    border-color:var(--teal);
+  }
+  .login-card button{
+    width:100%;
+    padding:11px;
+    border:none;
+    border-radius:6px;
+    background:var(--teal);
+    color:#fff;
+    font-family:inherit;
+    font-size:14.5px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .login-card button:hover{ background:var(--teal-dark); }
+  .login-error{
+    color:var(--danger);
+    font-size:13px;
+    text-align:center;
+    min-height:18px;
+    margin-top:12px;
+  }
+  .back-link{
+    display:block;
+    text-align:center;
+    margin-top:16px;
+    font-size:12.5px;
+    color:var(--muted);
+    text-decoration:none;
+  }
+  .back-link:hover{ text-decoration:underline; }
+
+  #dashboard{ display:none; }
+  .topbar{
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+    padding:14px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:sticky; top:0; z-index:5;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .topbar h1{
+    font-size:17px;
+    margin:0;
+  }
+  .topbar .who{
+    font-size:12.5px;
+    color:var(--muted);
+  }
+  .topbar-right{
+    display:flex; align-items:center; gap:14px;
+  }
+  .btn{
+    font-family:inherit;
+    font-size:13.5px;
+    padding:8px 16px;
+    border-radius:6px;
+    border:1px solid var(--teal);
+    background:#fff;
+    color:var(--teal);
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-block;
+  }
+  .btn:hover{ background:#eafbf9; }
+  .btn.danger{ border-color:var(--danger); color:var(--danger); }
+  .btn.danger:hover{ background:#fdeceb; }
+  .btn.primary{ background:var(--teal); color:#fff; }
+  .btn.primary:hover{ background:var(--teal-dark); }
+
+  .container{ max-width:1180px; margin:0 auto; padding:24px; }
+
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:22px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 18px;
+  }
+  .card .num{ font-size:26px; font-weight:700; color:var(--teal-dark); }
+  .card .lbl{ font-size:12.5px; color:var(--muted); margin-top:2px; }
+
+  .panels{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-bottom:22px;
+  }
+  .panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:18px 20px;
+  }
+  .panel h3{ font-size:14.5px; margin:0 0 12px; }
+  .bar-row{
+    display:flex; align-items:center; gap:10px;
+    font-size:13px; margin-bottom:8px;
+  }
+  .bar-row .bar-label{ flex:0 0 130px; color:var(--muted); }
+  .bar-track{
+    flex:1; background:#eef1f1; border-radius:4px; height:10px; overflow:hidden;
+  }
+  .bar-fill{ background:var(--teal); height:100%; }
+  .bar-row .bar-count{ flex:0 0 34px; text-align:right; font-weight:600; }
+
+  .table-panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:18px 20px;
+  }
+  .table-head{
+    display:flex; justify-content:space-between; align-items:center;
+    gap:12px; margin-bottom:14px; flex-wrap:wrap;
+  }
+  .table-head h3{ font-size:14.5px; margin:0; }
+  .search-box{
+    padding:8px 12px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    font-family:inherit;
+    font-size:13.5px;
+    min-width:220px;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+  }
+  th, td{
+    text-align:left;
+    padding:9px 8px;
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  th{
+    color:var(--muted);
+    font-weight:600;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.3px;
+  }
+  tr:hover td{ background:#f8fbfb; }
+  td.name-cell{ font-weight:600; cursor:pointer; color:var(--teal-dark); white-space:normal; }
+  .row-actions button{
+    font-family:inherit;
+    font-size:12px;
+    padding:5px 10px;
+    border-radius:5px;
+    border:1px solid var(--border);
+    background:#fff;
+    cursor:pointer;
+    margin-right:4px;
+  }
+  .row-actions button.del{ border-color:var(--danger); color:var(--danger); }
+  .empty-state{
+    text-align:center;
+    color:var(--muted);
+    padding:40px 10px;
+    font-size:13.5px;
+  }
+
+  .modal-overlay{
+    display:none;
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.45);
+    align-items:center; justify-content:center;
+    padding:20px; z-index:20;
+  }
+  .modal{
+    background:#fff;
+    border-radius:10px;
+    max-width:640px;
+    width:100%;
+    max-height:82vh;
+    overflow-y:auto;
+    padding:26px 28px;
+  }
+  .modal h2{ font-size:17px; margin:0 0 14px; }
+  .modal-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px 20px;
+    font-size:13.5px;
+  }
+  .modal-grid .k{ color:var(--muted); }
+  .modal-grid .v{ font-weight:500; margin-bottom:8px; }
+  .modal-close{ text-align:right; margin-top:16px; }
+
+  @media (max-width:900px){
+    .cards{ grid-template-columns:1fr 1fr; }
+    .panels{ grid-template-columns:1fr; }
+    .modal-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- =====================================================
+     PUBLIC VIEW: the job application form  (default route)
+     ===================================================== -->
+<div id="publicView">
+  <div class="sheet">
+    <div class="header">
+      <div class="photo-box"></div>
+      <h1>APPLICATION FOR EMPLOYMENT</h1>
+      <h2>ใบสมัครงาน</h2>
+      <p>กรอกข้อมูลด้วยตัวท่านเอง</p>
+      <p class="note">(To be completed in own handwriting)</p>
+    </div>
+
+    <form id="jobForm">
+
+      <div class="field-row">
+        <span class="lbl">ชื่อ&nbsp;&nbsp;:</span>
+        <input type="text" name="name" placeholder="">
+      </div>
+      <div class="eng-label" style="margin-left:0;">Name</div>
+
+      <div class="field-row">
+        <span class="lbl">ตำแหน่งที่ต้องการ&nbsp;1</span>
+        <input type="text" name="position" style="flex:2;">
+        <span class="lbl">เงินเดือน</span>
+        <input type="text" name="salary" style="flex:1;">
+        <span class="lbl">บาท / เดือน</span>
+      </div>
+      <div class="field-row">
+        <span class="lbl" style="visibility:hidden;">ตำแหน่งที่ต้องการ&nbsp;1</span>
+      </div>
+      <div class="grid3" style="margin-top:-14px;">
+        <div class="eng-label">Position Applied for &nbsp;2</div>
+        <div class="eng-label">Salary</div>
+        <div class="eng-label">Bath / month</div>
+      </div>
+
+      <div class="section-title">Personal information (ประวัติส่วนตัว)</div>
+
+      <div class="field-row">
+        <span class="lbl">ที่อยู่ปัจจุบันเลขที่</span>
+        <input type="text" name="addr_no" style="flex:1;">
+        <span class="lbl">หมู่ที่</span>
+        <input type="text" name="addr_moo" style="flex:0.6;">
+        <span class="lbl">ถนน</span>
+        <input type="text" name="addr_road" style="flex:1;">
+        <span class="lbl">ตำบล/แขวง</span>
+        <input type="text" name="addr_subdistrict" style="flex:1;">
+      </div>
+      <div class="grid3">
+        <div class="eng-label">Present address</div>
+        <div class="eng-label">Moo</div>
+        <div class="eng-label">Road</div>
+      </div>
+      <div class="eng-label" style="margin-top:-8px;">District</div>
+
+      <div class="field-row">
+        <span class="lbl">อำเภอ/เขต</span>
+        <input type="text" name="addr_district">
+        <span class="lbl">จังหวัด</span>
+        <input type="text" name="addr_province">
+        <span class="lbl">รหัสไปรษณีย์</span>
+        <input type="text" name="addr_postcode">
+      </div>
+      <div class="grid3">
+        <div class="eng-label">Amphur</div>
+        <div class="eng-label">Province</div>
+        <div class="eng-label">Post code</div>
+      </div>
+
+      <div class="field-row">
+        <span class="lbl">โทรศัพท์</span>
+        <input type="text" name="tel">
+        <span class="lbl">เพจเจอร์</span>
+        <input type="text" name="pager">
+        <span class="lbl">มือถือ</span>
+        <input type="text" name="mobile">
+      </div>
+      <div class="grid3">
+        <div class="eng-label">Tel.</div>
+        <div class="eng-label">Pager</div>
+        <div class="eng-label">Mobile</div>
+      </div>
+
+      <div class="field-row">
+        <span class="lbl">อีเมล์</span>
+        <input type="text" name="email">
+      </div>
+      <div class="eng-label">E-mail</div>
+
+      <div class="checks">
+        <div class="check-item">
+          <div class="th">อาศัยกับครอบครัว</div>
+          <label><input type="checkbox" name="live_with_family"> Living with parent</label>
+        </div>
+        <div class="check-item">
+          <div class="th">บ้านตัวเอง</div>
+          <label><input type="checkbox" name="own_home"> Own home</label>
+        </div>
+        <div class="check-item">
+          <div class="th">บ้านเช่า</div>
+          <label><input type="checkbox" name="hired_house"> Hired house</label>
+        </div>
+        <div class="check-item">
+          <div class="th">หอพัก</div>
+          <label><input type="checkbox" name="hostel"> Hiredflat / Hostel</label>
+        </div>
+      </div>
+
+      <hr class="spacer">
+      <div class="field-row">
+        <span class="lbl">วัน เดือน ปีเกิด</span>
+        <input type="text" name="dob" placeholder="dd/mm/yyyy">
+        <span class="lbl">อายุ</span>
+        <input type="text" name="age" style="flex:0.5;">
+        <span class="lbl">ปี</span>
+        <span class="lbl">เชื้อชาติ</span>
+        <input type="text" name="race">
+      </div>
+      <div class="grid3">
+        <div class="eng-label">Date of birth</div>
+        <div class="eng-label">Age &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Yrs.</div>
+        <div class="eng-label">Race</div>
+      </div>
+
+      <div class="field-row">
+        <span class="lbl">สัญชาติ</span>
+        <input type="text" name="nationality">
+        <span class="lbl">ศาสนา</span>
+        <input type="text" name="religion">
+      </div>
+      <div class="grid2">
+        <div class="eng-label">Nationality</div>
+        <div class="eng-label">Religion</div>
+      </div>
+
+      <div class="field-row">
+        <span class="lbl">บัตรประชาชนเลขที่</span>
+        <input type="text" name="id_card_no">
+        <span class="lbl">บัตรหมดอายุ</span>
+        <input type="text" name="id_expiry" placeholder="dd/mm/yyyy">
+      </div>
+      <div class="grid2">
+        <div class="eng-label">Identity card no.</div>
+        <div class="eng-label">Expiration date</div>
+      </div>
+
+      <div class="field-row">
+        <span class="lbl">ส่วนสูง</span>
+        <input type="text" name="height" style="flex:0.5;">
+        <span class="lbl">ซม.</span>
+        <span class="lbl">น้ำหนัก</span>
+        <input type="text" name="weight" style="flex:0.5;">
+        <span class="lbl">กก.</span>
+      </div>
+      <div class="grid2">
+        <div class="eng-label">Height &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cm.</div>
+        <div class="eng-label">Weight &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kgs.</div>
+      </div>
+
+      <div style="margin-top:12px; font-weight:600; font-size:14px;">ภาวะทางทหาร</div>
+      <div class="eng-label">Military status</div>
+      <div class="checks">
+        <div class="check-item">
+          <div class="th">ได้รับการยกเว้น</div>
+          <label><input type="checkbox" name="mil_exempted"> Exempted</label>
+        </div>
+        <div class="check-item">
+          <div class="th">ปลดเป็นทหารกองหนุน</div>
+          <label><input type="checkbox" name="mil_served"> Served</label>
+        </div>
+        <div class="check-item">
+          <div class="th">ยังไม่ได้รับการเกณฑ์</div>
+          <label><input type="checkbox" name="mil_not_served"> Not yet served</label>
+        </div>
+        <div class="check-item"></div>
+      </div>
+
+      <div style="margin-top:6px; font-weight:600; font-size:14px;">สถานภาพ</div>
+      <div class="eng-label">Marital status</div>
+      <div class="checks">
+        <div class="check-item">
+          <div class="th">โสด</div>
+          <label><input type="checkbox" name="marital_single" data-group="marital"> Single</label>
+        </div>
+        <div class="check-item">
+          <div class="th">แต่งงาน</div>
+          <label><input type="checkbox" name="marital_married" data-group="marital"> Married</label>
+        </div>
+        <div class="check-item">
+          <div class="th">หม้าย</div>
+          <label><input type="checkbox" name="marital_widowed" data-group="marital"> Widowed</label>
+        </div>
+        <div class="check-item">
+          <div class="th">แยกกัน</div>
+          <label><input type="checkbox" name="marital_separated" data-group="marital"> Separated</label>
+        </div>
+      </div>
+
+      <div style="margin-top:6px; font-weight:600; font-size:14px;">เพศ</div>
+      <div class="eng-label">Sex</div>
+      <div class="checks two">
+        <div class="check-item">
+          <div class="th">ชาย</div>
+          <label><input type="checkbox" name="sex_male" data-group="sex"> Male</label>
+        </div>
+        <div class="check-item">
+          <div class="th">หญิง</div>
+          <label><input type="checkbox" name="sex_female" data-group="sex"> Female</label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" id="saveBtn">บันทึกข้อมูล / Save</button>
+        <button type="button" class="secondary" id="clearBtn">ล้างข้อมูล / Clear</button>
+        <button type="button" class="secondary" id="newBtn">ใบสมัครใหม่ / New application</button>
+      </div>
+      <div class="status" id="statusMsg"></div>
+    </form>
+    <div style="text-align:center; margin-top:18px;">
+      <a href="#admin" style="font-size:12px; color:#999; text-decoration:none;">สำหรับเจ้าหน้าที่ / Staff dashboard</a>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     ADMIN VIEW: login gate + dashboard  (route: #admin)
+     ===================================================== -->
+<div id="adminView" style="display:none;">
+
+  <div id="loginScreen">
+    <div class="login-card">
+      <h1>Admin Dashboard</h1>
+      <p class="sub">ระบบสำหรับเจ้าหน้าที่ / ใบสมัครงาน</p>
+      <form id="loginForm">
+        <label for="loginEmail">อีเมล / Email</label>
+        <input type="email" id="loginEmail" required autocomplete="username">
+        <label for="loginPass">รหัสผ่าน / Password</label>
+        <input type="password" id="loginPass" required autocomplete="current-password">
+        <button type="submit">เข้าสู่ระบบ / Sign in</button>
+        <div class="login-error" id="loginError"></div>
+      </form>
+      <a href="#" class="back-link">&larr; กลับไปหน้าสมัครงาน / Back to application form</a>
+    </div>
+  </div>
+
+  <div id="dashboard">
+    <div class="topbar">
+      <h1>สรุปข้อมูลผู้สมัครงาน / Applicant Dashboard</h1>
+      <div class="topbar-right">
+        <a href="#" class="btn">&larr; หน้าสมัครงาน / Form</a>
+        <span class="who" id="whoAmI"></span>
+        <button class="btn" id="refreshBtn">รีเฟรช / Refresh</button>
+        <button class="btn danger" id="logoutBtn">ออกจากระบบ / Sign out</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="cards">
+        <div class="card">
+          <div class="num" id="statTotal">0</div>
+          <div class="lbl">ใบสมัครทั้งหมด / Total applications</div>
+        </div>
+        <div class="card">
+          <div class="num" id="statMale">0</div>
+          <div class="lbl">ชาย / Male</div>
+        </div>
+        <div class="card">
+          <div class="num" id="statFemale">0</div>
+          <div class="lbl">หญิง / Female</div>
+        </div>
+        <div class="card">
+          <div class="num" id="statAvgAge">-</div>
+          <div class="lbl">อายุเฉลี่ย / Average age</div>
+        </div>
+      </div>
+
+      <div class="panels">
+        <div class="panel">
+          <h3>ตำแหน่งที่มีผู้สมัครมากที่สุด / Top positions applied for</h3>
+          <div id="topPositions"></div>
+        </div>
+        <div class="panel">
+          <h3>สถานภาพสมรส / Marital status</h3>
+          <div id="maritalBreakdown"></div>
+        </div>
+      </div>
+
+      <div class="table-panel">
+        <div class="table-head">
+          <h3>รายชื่อผู้สมัครทั้งหมด / All applicants</h3>
+          <input type="text" class="search-box" id="searchBox" placeholder="ค้นหาชื่อ หรือ ตำแหน่ง... / Search name or position...">
+        </div>
+        <div style="overflow-x:auto;">
+          <table id="appTable">
+            <thead>
+              <tr>
+                <th>ชื่อ / Name</th>
+                <th>ตำแหน่ง / Position</th>
+                <th>อายุ / Age</th>
+                <th>เพศ / Sex</th>
+                <th>โทรศัพท์ / Mobile</th>
+                <th>อีเมล / Email</th>
+                <th>วันที่ / Submitted</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="appTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="emptyState" style="display:none;">ยังไม่มีข้อมูลผู้สมัคร / No applications yet.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ DETAIL MODAL (part of admin view) ============ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalName"></h2>
+    <div class="modal-grid" id="modalGrid"></div>
+    <div class="modal-close">
+      <button class="btn" id="modalCloseBtn">ปิด / Close</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+  import {
+    getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
+  } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+  import {
+    getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs, deleteDoc,
+    serverTimestamp, query, orderBy
+  } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBF7iH8PmMN-Wvls1etpBc7ZyF7i6VuuPo",
+    authDomain: "mywebapp2569.firebaseapp.com",
+    projectId: "mywebapp2569",
+    storageBucket: "mywebapp2569.firebasestorage.app",
+    messagingSenderId: "330523040809",
+    appId: "1:330523040809:web:ab87ad921ad53a011ed038"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth(firebaseApp);
+  const db = getFirestore(firebaseApp);
+  const COLLECTION_NAME = 'applications';
+
+  /* =====================================================
+     ROUTING: #admin shows the admin area, anything else
+     (including no hash) shows the public application form.
+     ===================================================== */
+  const publicView = document.getElementById('publicView');
+  const adminView = document.getElementById('adminView');
+
+  function applyRoute() {
+    const isAdmin = window.location.hash === '#admin';
+    publicView.style.display = isAdmin ? 'none' : 'block';
+    adminView.style.display = isAdmin ? 'block' : 'none';
+  }
+  window.addEventListener('hashchange', applyRoute);
+  applyRoute();
+
+  /* =====================================================
+     PUBLIC APPLICATION FORM LOGIC
+     ===================================================== */
+  const DOC_ID_KEY = 'job_application_doc_id'; // remembers which Firestore doc belongs to this browser
+
+  const jobForm = document.getElementById('jobForm');
+  const statusMsg = document.getElementById('statusMsg');
+  const saveBtn = document.getElementById('saveBtn');
+
+  let autosaveTimer = null;
+
+  // Make single-select groups behave like radio buttons (marital / sex)
+  ['marital', 'sex'].forEach(function (group) {
+    const boxes = jobForm.querySelectorAll('input[data-group="' + group + '"]');
+    boxes.forEach(function (box) {
+      box.addEventListener('change', function () {
+        if (box.checked) {
+          boxes.forEach(function (other) {
+            if (other !== box) other.checked = false;
+          });
+        }
+      });
+    });
+  });
+
+  function setStatus(text, ms) {
+    statusMsg.textContent = text;
+    if (ms) {
+      setTimeout(function () { statusMsg.textContent = ''; }, ms);
+    }
+  }
+
+  function collectFormData() {
+    const data = {};
+    Array.prototype.forEach.call(jobForm.elements, function (el) {
+      if (!el.name) return;
+      if (el.type === 'checkbox') {
+        data[el.name] = el.checked;
+      } else {
+        data[el.name] = el.value;
+      }
+    });
+    return data;
+  }
+
+  function applyFormData(data) {
+    Object.keys(data).forEach(function (name) {
+      const el = jobForm.elements[name];
+      if (!el) return;
+      if (el.type === 'checkbox') {
+        el.checked = !!data[name];
+      } else {
+        el.value = data[name];
+      }
+    });
+  }
+
+  function getDocId() { return localStorage.getItem(DOC_ID_KEY); }
+  function setDocId(id) { localStorage.setItem(DOC_ID_KEY, id); }
+  function clearDocId() { localStorage.removeItem(DOC_ID_KEY); }
+
+  // Load existing application (if this browser already has one) from Firestore
+  async function loadFormData() {
+    const docId = getDocId();
+    if (!docId) return;
+    try {
+      setStatus('กำลังโหลดข้อมูล... / Loading...');
+      const snap = await getDoc(doc(db, COLLECTION_NAME, docId));
+      if (snap.exists()) {
+        applyFormData(snap.data());
+        setStatus('โหลดข้อมูลที่บันทึกไว้แล้ว / Loaded your saved application.', 3000);
+      } else {
+        clearDocId();
+        setStatus('');
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus('โหลดข้อมูลไม่สำเร็จ / Could not load saved data.', 4000);
+    }
+  }
+
+  // Save (create or update) to Firestore
+  async function saveFormData(showMessage) {
+    const data = collectFormData();
+    data.updatedAt = serverTimestamp();
+    try {
+      if (showMessage) saveBtn.disabled = true;
+      const docId = getDocId();
+      if (docId) {
+        await setDoc(doc(db, COLLECTION_NAME, docId), data, { merge: true });
+      } else {
+        data.createdAt = serverTimestamp();
+        const ref = await addDoc(collection(db, COLLECTION_NAME), data);
+        setDocId(ref.id);
+      }
+      if (showMessage) {
+        setStatus('บันทึกข้อมูลไปยัง Firebase เรียบร้อยแล้ว / Saved to Firebase successfully.', 3000);
+      }
+      return true;
+    } catch (err) {
+      console.error(err);
+      if (showMessage) {
+        setStatus('บันทึกข้อมูลไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่อ / Save failed. Check your connection.', 5000);
+      }
+      return false;
+    } finally {
+      if (showMessage) saveBtn.disabled = false;
+    }
+  }
+
+  jobForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    saveFormData(true);
+  });
+
+  jobForm.addEventListener('input', function () {
+    clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(function () { saveFormData(false); }, 1200);
+  });
+  jobForm.addEventListener('change', function () {
+    clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(function () { saveFormData(false); }, 400);
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', function () {
+    if (!confirm('ต้องการล้างข้อมูลในฟอร์มนี้หรือไม่? (ข้อมูลบน Firebase จะถูกลบด้วย) / Clear this form? This will also delete it from Firebase.')) return;
+    (async function () {
+      const docId = getDocId();
+      jobForm.reset();
+      if (docId) {
+        try { await deleteDoc(doc(db, COLLECTION_NAME, docId)); }
+        catch (err) { console.error(err); }
+        clearDocId();
+      }
+      setStatus('ล้างข้อมูลแล้ว / Cleared.', 3000);
+    })();
+  });
+
+  document.getElementById('newBtn').addEventListener('click', function () {
+    if (!confirm('เริ่มใบสมัครใหม่หรือไม่? ใบสมัครปัจจุบันจะยังถูกเก็บไว้บน Firebase / Start a new application? The current one stays saved on Firebase.')) return;
+    jobForm.reset();
+    clearDocId();
+    setStatus('พร้อมกรอกใบสมัครใหม่ / Ready for a new application.', 3000);
+  });
+
+  loadFormData();
+
+  /* =====================================================
+     ADMIN DASHBOARD LOGIC
+     ===================================================== */
+  const loginScreenEl = document.getElementById('loginScreen');
+  const dashboardEl = document.getElementById('dashboard');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const whoAmI = document.getElementById('whoAmI');
+
+  let allDocs = []; // cached applications { id, ...data }
+
+  loginForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    loginError.textContent = '';
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (err) {
+      loginError.textContent = 'เข้าสู่ระบบไม่สำเร็จ / Sign-in failed: ' + (err.code || err.message);
+    }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    signOut(auth);
+  });
+
+  onAuthStateChanged(auth, function (user) {
+    if (user) {
+      loginScreenEl.style.display = 'none';
+      dashboardEl.style.display = 'block';
+      whoAmI.textContent = user.email;
+      loadApplications();
+    } else {
+      loginScreenEl.style.display = 'flex';
+      dashboardEl.style.display = 'none';
+    }
+  });
+
+  async function loadApplications() {
+    try {
+      const q = query(collection(db, COLLECTION_NAME), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      allDocs = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
+    } catch (err) {
+      console.warn('Falling back to unordered fetch:', err);
+      const snap = await getDocs(collection(db, COLLECTION_NAME));
+      allDocs = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
+    }
+    renderSummary(allDocs);
+    renderTable(allDocs);
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', loadApplications);
+
+  function renderSummary(docs) {
+    document.getElementById('statTotal').textContent = docs.length;
+
+    const male = docs.filter(function (d) { return d.sex_male; }).length;
+    const female = docs.filter(function (d) { return d.sex_female; }).length;
+    document.getElementById('statMale').textContent = male;
+    document.getElementById('statFemale').textContent = female;
+
+    const ages = docs.map(function (d) { return parseFloat(d.age); }).filter(function (n) { return !isNaN(n); });
+    const avgAge = ages.length ? (ages.reduce(function (a, b) { return a + b; }, 0) / ages.length).toFixed(1) : '-';
+    document.getElementById('statAvgAge').textContent = avgAge;
+
+    const posCounts = {};
+    docs.forEach(function (d) {
+      const p = (d.position || '').trim();
+      if (!p) return;
+      posCounts[p] = (posCounts[p] || 0) + 1;
+    });
+    const topPositions = Object.entries(posCounts).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 6);
+    const posEl = document.getElementById('topPositions');
+    posEl.innerHTML = '';
+    if (topPositions.length === 0) {
+      posEl.innerHTML = '<div class="empty-state" style="padding:10px 0;">ไม่มีข้อมูล / No data</div>';
+    } else {
+      const max = topPositions[0][1];
+      topPositions.forEach(function (pair) {
+        posEl.appendChild(makeBarRow(pair[0], pair[1], max));
+      });
+    }
+
+    const maritalKeys = [
+      ['marital_single', 'โสด / Single'],
+      ['marital_married', 'แต่งงาน / Married'],
+      ['marital_widowed', 'หม้าย / Widowed'],
+      ['marital_separated', 'แยกกัน / Separated']
+    ];
+    const maritalEl = document.getElementById('maritalBreakdown');
+    maritalEl.innerHTML = '';
+    const maritalCounts = maritalKeys.map(function (pair) {
+      return [pair[1], docs.filter(function (d) { return d[pair[0]]; }).length];
+    });
+    const maxM = Math.max.apply(null, maritalCounts.map(function (p) { return p[1]; }).concat([1]));
+    maritalCounts.forEach(function (pair) {
+      maritalEl.appendChild(makeBarRow(pair[0], pair[1], maxM));
+    });
+  }
+
+  function makeBarRow(label, count, max) {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    const pct = max > 0 ? Math.round((count / max) * 100) : 0;
+    row.innerHTML =
+      '<div class="bar-label" title="' + escapeHtml(label) + '">' + escapeHtml(label) + '</div>' +
+      '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+      '<div class="bar-count">' + count + '</div>';
+    return row;
+  }
+
+  function renderTable(docs) {
+    const tbody = document.getElementById('appTableBody');
+    const emptyState = document.getElementById('emptyState');
+    tbody.innerHTML = '';
+
+    if (docs.length === 0) {
+      emptyState.style.display = 'block';
+      return;
+    }
+    emptyState.style.display = 'none';
+
+    docs.forEach(function (d) {
+      const tr = document.createElement('tr');
+      const sex = d.sex_male ? 'ชาย/Male' : (d.sex_female ? 'หญิง/Female' : '-');
+      const submitted = formatDate(d.createdAt);
+      tr.innerHTML =
+        '<td class="name-cell" data-id="' + d.id + '">' + escapeHtml(d.name || '-') + '</td>' +
+        '<td>' + escapeHtml(d.position || '-') + '</td>' +
+        '<td>' + escapeHtml(d.age || '-') + '</td>' +
+        '<td>' + sex + '</td>' +
+        '<td>' + escapeHtml(d.mobile || d.tel || '-') + '</td>' +
+        '<td>' + escapeHtml(d.email || '-') + '</td>' +
+        '<td>' + submitted + '</td>' +
+        '<td class="row-actions"><button class="del" data-id="' + d.id + '">ลบ / Delete</button></td>';
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('.name-cell').forEach(function (cell) {
+      cell.addEventListener('click', function () {
+        openDetail(cell.getAttribute('data-id'));
+      });
+    });
+    tbody.querySelectorAll('.row-actions .del').forEach(function (btn) {
+      btn.addEventListener('click', async function () {
+        const id = btn.getAttribute('data-id');
+        if (!confirm('ลบใบสมัครนี้หรือไม่? / Delete this application?')) return;
+        try {
+          await deleteDoc(doc(db, COLLECTION_NAME, id));
+          allDocs = allDocs.filter(function (d) { return d.id !== id; });
+          renderSummary(allDocs);
+          applySearch();
+        } catch (err) {
+          alert('ลบไม่สำเร็จ / Delete failed: ' + err.message);
+        }
+      });
+    });
+  }
+
+  document.getElementById('searchBox').addEventListener('input', applySearch);
+  function applySearch() {
+    const term = document.getElementById('searchBox').value.trim().toLowerCase();
+    if (!term) {
+      renderTable(allDocs);
+      return;
+    }
+    const filtered = allDocs.filter(function (d) {
+      return (d.name || '').toLowerCase().includes(term) ||
+             (d.position || '').toLowerCase().includes(term);
+    });
+    renderTable(filtered);
+  }
+
+  const FIELD_LABELS = [
+    ['name', 'ชื่อ / Name'],
+    ['position', 'ตำแหน่งที่ต้องการ / Position'],
+    ['salary', 'เงินเดือน / Salary'],
+    ['addr_no', 'ที่อยู่เลขที่ / Address no.'],
+    ['addr_moo', 'หมู่ที่ / Moo'],
+    ['addr_road', 'ถนน / Road'],
+    ['addr_subdistrict', 'ตำบล/แขวง / Sub-district'],
+    ['addr_district', 'อำเภอ/เขต / District'],
+    ['addr_province', 'จังหวัด / Province'],
+    ['addr_postcode', 'รหัสไปรษณีย์ / Post code'],
+    ['tel', 'โทรศัพท์ / Tel'],
+    ['pager', 'เพจเจอร์ / Pager'],
+    ['mobile', 'มือถือ / Mobile'],
+    ['email', 'อีเมล / Email'],
+    ['dob', 'วันเดือนปีเกิด / Date of birth'],
+    ['age', 'อายุ / Age'],
+    ['race', 'เชื้อชาติ / Race'],
+    ['nationality', 'สัญชาติ / Nationality'],
+    ['religion', 'ศาสนา / Religion'],
+    ['id_card_no', 'บัตรประชาชนเลขที่ / ID card no.'],
+    ['id_expiry', 'บัตรหมดอายุ / ID expiry'],
+    ['height', 'ส่วนสูง (ซม.) / Height (cm)'],
+    ['weight', 'น้ำหนัก (กก.) / Weight (kg)']
+  ];
+  const CHECKBOX_GROUPS = [
+    { title: 'ลักษณะที่พักอาศัย / Living arrangement', fields: [
+      ['live_with_family', 'อาศัยกับครอบครัว / Living with parent'],
+      ['own_home', 'บ้านตัวเอง / Own home'],
+      ['hired_house', 'บ้านเช่า / Hired house'],
+      ['hostel', 'หอพัก / Hiredflat/Hostel']
+    ] },
+    { title: 'ภาวะทางทหาร / Military status', fields: [
+      ['mil_exempted', 'ได้รับการยกเว้น / Exempted'],
+      ['mil_served', 'ปลดเป็นทหารกองหนุน / Served'],
+      ['mil_not_served', 'ยังไม่ได้รับการเกณฑ์ / Not yet served']
+    ] },
+    { title: 'สถานภาพ / Marital status', fields: [
+      ['marital_single', 'โสด / Single'],
+      ['marital_married', 'แต่งงาน / Married'],
+      ['marital_widowed', 'หม้าย / Widowed'],
+      ['marital_separated', 'แยกกัน / Separated']
+    ] },
+    { title: 'เพศ / Sex', fields: [
+      ['sex_male', 'ชาย / Male'],
+      ['sex_female', 'หญิง / Female']
+    ] }
+  ];
+
+  function openDetail(id) {
+    const d = allDocs.find(function (x) { return x.id === id; });
+    if (!d) return;
+    document.getElementById('modalName').textContent = d.name || '(ไม่มีชื่อ / No name)';
+    const grid = document.getElementById('modalGrid');
+    grid.innerHTML = '';
+
+    FIELD_LABELS.forEach(function (pair) {
+      const val = d[pair[0]];
+      if (val === undefined || val === '') return;
+      grid.innerHTML += '<div class="k">' + pair[1] + '</div><div class="v">' + escapeHtml(val) + '</div>';
+    });
+
+    CHECKBOX_GROUPS.forEach(function (group) {
+      const checked = group.fields.filter(function (f) { return d[f[0]]; }).map(function (f) { return f[1]; });
+      if (checked.length === 0) return;
+      grid.innerHTML += '<div class="k">' + group.title + '</div><div class="v">' + checked.map(escapeHtml).join(', ') + '</div>';
+    });
+
+    grid.innerHTML += '<div class="k">วันที่ส่งใบสมัคร / Submitted</div><div class="v">' + formatDate(d.createdAt) + '</div>';
+
+    document.getElementById('modalOverlay').style.display = 'flex';
+  }
+  document.getElementById('modalCloseBtn').addEventListener('click', function () {
+    document.getElementById('modalOverlay').style.display = 'none';
+  });
+  document.getElementById('modalOverlay').addEventListener('click', function (e) {
+    if (e.target === this) this.style.display = 'none';
+  });
+
+  function formatDate(ts) {
+    if (!ts) return '-';
+    try {
+      const dt = ts.toDate ? ts.toDate() : new Date(ts);
+      return dt.toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' });
+    } catch (e) {
+      return '-';
+    }
+  }
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+</script>
+</body>
+</html>
